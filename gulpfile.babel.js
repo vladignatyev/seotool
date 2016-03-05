@@ -5,8 +5,24 @@ import browserSync from 'browser-sync';
 import del from 'del';
 import {stream as wiredep} from 'wiredep';
 
+import nunjucksRender from 'gulp-nunjucks-render';
+
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
+
+
+gulp.task('nunjucks', () => {
+  return gulp.src('app/pages/**/*.+(html|nunjucks)')
+    .pipe(nunjucksRender({
+      path: 'app/templates',
+      envOptions: {
+        trimBlocks: true,
+        lstripBlocks: true,
+        throwOnUndefined: true
+      }
+    }))
+    .pipe(gulp.dest('app'))
+});
 
 gulp.task('styles', () => {
   return gulp.src('app/styles/*.scss')
@@ -51,8 +67,11 @@ const testLintOptions = {
 gulp.task('lint', lint('app/scripts/**/*.js'));
 gulp.task('lint:test', lint('test/spec/**/*.js', testLintOptions));
 
-gulp.task('html', ['styles', 'scripts'], () => {
-  return gulp.src('app/*.html')
+gulp.task('html', ['nunjucks', 'styles', 'scripts'], () => {
+  return gulp.src([
+    '!app/**/*.html',
+    'app/*.html',
+  ])
     .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
     .pipe($.if('*.js', $.uglify()))
     .pipe($.if('*.css', $.cssnano()))
@@ -88,7 +107,7 @@ gulp.task('extras', () => {
   }).pipe(gulp.dest('dist'));
 });
 
-gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
+gulp.task('clean', del.bind(null, ['.tmp', 'dist', 'app/index.html']));
 
 gulp.task('serve', ['styles', 'scripts', 'fonts'], () => {
   browserSync({
