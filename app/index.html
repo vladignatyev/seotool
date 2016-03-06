@@ -35,17 +35,31 @@
 
       <div class="row">
         <div class="col-md-12">
-          {% block content %}{% endblock %}
+<div class="jumbotron hello-view">
+  <h3>Upload the <code>.csv</code> file <br/>obtained from <em>Google AdWords Keyword Planner</em></h3>
+  <button class="upload-file btn btn-primary btn-small"><i class="glyphicon glyphicon-folder-open">&nbsp;</i> Select file</button>
+  <input id="file-input" type="file" class="hidden" />
+</div>
+
+<div class="row graphics-view" style="display:none;">
+</div>
+
+
         </div>
       </div>
 
       <div class="footer">
-        {% block footer %}{% endblock %}
+This site still doesn't exist.
       </div>
     </div>
 
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap.js"></script>
+    <script src="/bower_components/d3/d3.js"></script>
+    <script src="/bower_components/papaparse/papaparse.js"></script>
+    <script src="/bower_components/lodash/lodash.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 

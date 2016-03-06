@@ -2,7 +2,10 @@
   "name": "seoinsighttool",
   "private": true,
   "dependencies": {
-    "bootstrap-sass": "~3.3.5"
+    "bootstrap-sass": "~3.3.5",
+    "d3": "^3.5.16",
+    "papaparse": "^4.1.2",
+    "lodash": "^4.6.1"
   },
   "overrides": {
     "bootstrap-sass": {

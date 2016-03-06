@@ -1,7 +1,16 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1>blah-blah</h1>
+<div class="jumbotron hello-view">
+  <h3>Upload the <code>.csv</code> file <br/>obtained from <em>Google AdWords Keyword Planner</em></h3>
+  <button class="upload-file btn btn-primary btn-small"><i class="glyphicon glyphicon-folder-open">&nbsp;</i> Select file</button>
+  <input id="file-input" type="file" class="hidden" />
+</div>
+
+<div class="row graphics-view" style="display:none;">
+</div>
+
+
 {% endblock %}
 
 {% block footer %}

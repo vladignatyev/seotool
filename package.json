@@ -41,5 +41,10 @@
         "single"
       ]
     }
+  },
+  "dependencies": {
+    "babelify": "^7.2.0",
+    "bower-requirejs": "^1.2.0",
+    "browserify": "^13.0.0"
   }
 }
