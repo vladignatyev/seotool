@@ -1,5 +1,13 @@
-class ResultProcessor {
+class DataProperties {
+  constructor(points) {
+    let sortedByCompetition = _.sortBy(points, (point) => point.competition);
+    let sortedByVolume = _.sortBy(points, (point) => point.volume);
+    let sortedByBid = _.sortBy(points, (point) => point.bid);
 
+    [this.minCompetition, this.maxCompetition] = [_.first(sortedByCompetition).competition, _.last(sortedByCompetition).competition];
+    [this.minVolume, this.maxVolume] = [_.first(sortedByVolume).volume, _.last(sortedByVolume).volume];
+    [this.minBid, this.maxBid] = [_.first(sortedByBid).bid, _.last(sortedByBid).bid];
+  }
 }
 
 function mapRowToPoint(row) {
@@ -39,7 +47,7 @@ class FileParser {
         step: function(results, parser)
         {
           var point = mapRowToPoint(results.data[0]);
-          if (point) points.push(point);
+          if (point) points.push(point); //todo use streaming
         },
         complete: function() {
           completeHandler(points);
