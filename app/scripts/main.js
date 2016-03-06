@@ -1,76 +1,98 @@
+
 function app() {
-  const V_WIDTH = 800;
-  const V_HEIGHT = 600;
-  const BUBBLE_SIZE = 100;
-  const BUBBLE_ALPHA_FACTOR = 2.0;
-  const _BUBBLE_ALPHA_FACTOR = 1.0 / BUBBLE_ALPHA_FACTOR;
+  var plotProperties = new PlotProperties();
 
-  let colorFactory = new ColorFactory();
-  let coordinateSystem;
-  let svg;
-  let rgb;
 
-  $('.upload-file')
-    .off('click')
-    .on('click', () => {
-      $('#file-input')
-        .off('change')
-        .on('change', fileSelectHandler)
-        .click();
-    });
+  var serieFactory = new SerieFactory(plotProperties);
+  var coordinateSystem;
+  var svg;
+  var props;
 
-  function fileSelectHandler(event) {
-    (new FileParser()).parse(this.files[0], function(points){
-      hideHelloView();
-      showDataView();
-      presentData(points);
-    });
-  };
+  var selectionsTable = $('.selections-list').DataTable({
+    paging: false,
+    searching: false,
+    ordering: true
+  });
+
+
+  $('.upload-file').on('click', () => {
+    $('#file-input').click();
+  });
+
+  $('.clear-selection').click(function(){
+      // for (var serie of serieFactory.series) {
+      //   console.log(serie);
+      //   serie.clearSelection();
+      // }
+      // $('.selections-list tbody').html('');
+      selectionsTable.rows().remove().draw();
+  });
+
+  $('#file-input').on('change', function(){
+    try {
+      (new FileParser()).parse(this.files[0], function(points){
+        hideHelloView();
+        showDataView();
+        presentData(points);
+      });
+    } catch (e) {
+
+    }
+  });
 
   function hideHelloView() {
-    $('.hello-view').hide();
+    // $('.hello-view').hide();
   }
 
   function showDataView() {
     $('.graphics-view').show();
   }
 
+  function selectionHandler(d3el, point, serie, identifier) {
+    // d3.select
+    // if (!point) {
+    //   for (var serie in serieFactory.series) {
+    //     serie.clearSelection();
+    //   }
+    //   $('.selections-list').remove();
+    //   return;
+    // }
+
+    if (!point) {
+      return;
+    }
+
+    selectionsTable.row.add([
+      `<a target="_blank" href="https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#newwindow=1&safe=strict&q=${point.keywords}"><b>${point.keywords}</b></a>`,
+      `${point.competition}`,
+      `${point.bid}`,
+      `${point.monthly_searches}`
+    ]).draw(true);
+
+    // $(`<tr data-point="#${identifier}" style="background-color: rgb(${serie.color});">`
+    //  + `<td><a target="_blank" href="https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#newwindow=1&safe=strict&q=${point.keywords}"><b>${point.keywords}</b></a></td><td>${point.competition}</td><td>${point.bid}</td>`
+    //  + `<td>${point.monthly_searches}</td></tr>`).appendTo($('.selections-list tbody'));
+    //
+    //  selectionsTable.draw();
+  }
+
   function presentData(points) {
-    let props = new DataProperties(points);
+    props = props ||  new DataProperties(points);
 
     if (!coordinateSystem) {
       svg = d3.select('.graphics-view')
         .append('svg')
-        .attr('width', V_WIDTH)
-        .attr('height', V_HEIGHT)
-        .attr('viewBox', `-${BUBBLE_SIZE} -${0.75* BUBBLE_SIZE} ${V_WIDTH * 1.25} ${V_HEIGHT * 1.25}`);
+        .attr('width', plotProperties.V_WIDTH)
+        .attr('height', plotProperties.V_HEIGHT)
+        .attr('viewBox', `-${plotProperties.BUBBLE_SIZE} -${0.75* plotProperties.BUBBLE_SIZE} ${plotProperties.V_WIDTH * 1.25} ${plotProperties.V_HEIGHT * 1.25}`);
 
-      coordinateSystem = new CoordinateSystem(svg, V_WIDTH, V_HEIGHT);
+      coordinateSystem = new CoordinateSystem(svg, plotProperties.V_WIDTH, plotProperties.V_HEIGHT);
       coordinateSystem.draw();
       coordinateSystem.legend(props.minBid, props.maxBid, props.minCompetition, props.maxCompetition);
     }
 
-    rgb = colorFactory.getNewColor();
-
-    var circles = svg.selectAll('circle')
-      .data(points)
-      .enter()
-      .append('circle')
-      .attr('cx', (d) => {
-        return V_WIDTH * (d.competition - props.minCompetition) / (props.maxCompetition - props.minCompetition);
-      })
-      .attr('cy', (d) => {
-        return V_HEIGHT - V_HEIGHT * (d.bid - props.minBid) / (props.maxBid - props.minBid);
-      })
-      .attr('r', (d) => {
-        var a = Math.sqrt((d.volume - props.minVolume) / (props.maxVolume - props.minVolume));
-        return (BUBBLE_SIZE * a + 1);
-      })
-      .attr('fill', (d) => {
-        let a = BUBBLE_ALPHA_FACTOR * (d.volume - props.minVolume) / (props.maxVolume - props.minVolume);
-        let alpha = (_BUBBLE_ALPHA_FACTOR / (a * a + 1.0)).toFixed(2);
-        return `rgba(${rgb},${alpha})`;
-      });
+    let serie = serieFactory.createSerie(points, props, selectionHandler);
+    serie.render(svg);
   }
 }
 

@@ -14,15 +14,17 @@ function mapRowToPoint(row) {
   var [, keywords,,monthly_searches,competition,bid,] = row;
 
   try {
+
     monthly_searches = parseInt(monthly_searches);
     competition = parseFloat(competition.replace(',', '.')); // todo
     bid = parseFloat(bid.replace(',', '.')); // todo
   } catch (e) {
     return undefined;
   } finally {
-    if (!keywords || !monthly_searches || !competition || !bid) return undefined;
+    if (!keywords || !monthly_searches || !competition || !bid || Number.isNaN(monthly_searches)) return undefined;
   }
 
+  console.log(monthly_searches);
   return {
     'keywords': keywords,
     'monthly_searches': monthly_searches,

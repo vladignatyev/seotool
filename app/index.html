@@ -41,7 +41,22 @@
   <input id="file-input" type="file" class="hidden" />
 </div>
 
-<div class="row graphics-view" style="display:none;">
+<div class="graphics-view" style="display:none;">
+</div>
+<div class="selections-view">
+  <button class="clear-selection btn btn-default btn-small"><i class="glyphicon glyphicon-remove-circle"></i> Clear selection</button>
+  <table data-toggle="table" class="selections-list">
+    <thead>
+      <tr>
+        <th><i class="glyphicon glyphicon-new-window"></i> Keyword</th>
+        <th>Competition</th>
+        <th>Bid</th>
+        <th>Search requests (monthly)</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
 </div>
 
 
@@ -60,6 +75,7 @@ This site still doesn't exist.
     <script src="/bower_components/d3/d3.js"></script>
     <script src="/bower_components/papaparse/papaparse.js"></script>
     <script src="/bower_components/lodash/lodash.js"></script>
+    <script src="/bower_components/datatables.net/js/jquery.dataTables.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -70,7 +86,9 @@ This site still doesn't exist.
     <script src="scripts/gfx.js"></script>
     <script src="scripts/utils.js"></script>
     <script src="scripts/seoinsighttool.js"></script>
-    
+    <script src="scripts/settings.js"></script>
+    <script src="scripts/series.js"></script>
+
     <script src="scripts/main.js"></script>
     <!-- endbuild -->
   </body>
