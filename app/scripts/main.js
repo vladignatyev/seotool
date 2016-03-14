@@ -20,11 +20,9 @@ function app() {
   });
 
   $('.clear-selection').click(function(){
-      // for (var serie of serieFactory.series) {
-      //   console.log(serie);
-      //   serie.clearSelection();
-      // }
-      // $('.selections-list tbody').html('');
+      for (var serie of serieFactory.series) {
+        serie.clearSelection();
+      }
       selectionsTable.rows().remove().draw();
   });
 

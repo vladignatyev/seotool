@@ -16,12 +16,11 @@ class Serie {
   }
 
   clearSelection() {
-    this.group.selectAll('circle').classed('selected', false);
+    this.group.selectAll('circle').classed('selected', false).attr("pointer-events", "visiblePainted");
     this.selectionHandler(undefined, undefined);
   }
 
   render(svg){
-    console.log('Plot properties', this.plotProperties);
     this.group = svg.append('g');
     var color = this.color;
 
@@ -29,7 +28,7 @@ class Serie {
     var self = this;
 
     var circles = this.group.selectAll('circle')
-      .data(this.points)
+      .data(_.reverse(_.sortBy(this.points, 'volume')))
       .enter()
       .append('g')
       .append('circle')
@@ -75,7 +74,6 @@ class SerieFactory {
       selectionHandler
     );
     this.series.push(serie);
-    console.log('this.series', this.series);
     return serie;
   }
 }
